@@ -149,11 +149,37 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
   // We only have one modal command so we dont need more IF statements to handle it
   if (type === InteractionType.MODAL_SUBMIT) {
+    const originalChannelId = req.body.channel_id;
     const memberId = req.body.member.user.id;
     const components = req.body.data.components;
     const data = getDataFromModalComponents(components);
     console.log('modal submitted', memberId, data);
-    return res.status(200).json({ message: 'Modal submitted' });
+
+    // Acknowledge the interaction first
+    res.send({
+      type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+    });
+
+    // Send message to specific channel
+    const channelToPostTradesIn = process.env.CHANNEL_TO_POST_TRADES_IN || originalChannelId;
+
+    try {
+      await DiscordRequest(`channels/${channelToPostTradesIn}/messages`, {
+        method: 'POST',
+        body: {
+          components: [
+            {
+              type: MessageComponentTypes.TEXT_DISPLAY,
+              content: `<@${memberId}> submitted the following trade offer: ${data.toString()}, DM them to talk about the trade.`
+            }
+          ]
+        },
+      });
+    } catch (err) {
+      console.error('Error sending message to channel:', err);
+    }
+
+    return;
   }
 
   console.error('unknown interaction type', type);
@@ -168,7 +194,6 @@ function getDataFromModalComponents(components) {
   const data = {};
   for (const componentData of components) {
     const component = componentData.component;
-    console.log('component', component);
     const value = component.value ?? component.values;
     data[component.custom_id] = value;
   }
