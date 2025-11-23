@@ -1,113 +1,108 @@
-# Discord Form Bot
+# Getting Started app for Discord
 
-A TypeScript Discord bot that uses Discord Modals to create custom form inputs. Built with discord.js v14.
+This project contains a basic rock-paper-scissors-style Discord app written in JavaScript, built for the [getting started guide](https://discord.com/developers/docs/getting-started).
 
-## Features
+![Demo of app](https://github.com/discord/discord-example-app/raw/main/assets/getting-started-demo.gif?raw=true)
 
-- Slash command `/form` that opens a modal with:
-  - Short text input (nameInput)
-  - Paragraph input (messageInput)
-- Posts collected answers to the channel when submitted
-- Clean, organized project structure
-- Auto-loading commands and events
-
-## Prerequisites
-
-- Node.js (v16 or higher)
-- npm or yarn
-- A Discord bot token and application client ID
-
-## Setup
-
-1. **Clone or navigate to the project directory:**
-   ```bash
-   cd discord-form-bot
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables:**
-   - Copy `.env.example` to `.env`
-   - Fill in your Discord bot token and client ID:
-     ```
-     DISCORD_TOKEN=your_bot_token_here
-     CLIENT_ID=your_client_id_here
-     ```
-
-4. **Build the project:**
-   ```bash
-   npm run build
-   ```
-
-5. **Deploy slash commands:**
-   ```bash
-   npm run deploy
-   ```
-   This registers the `/form` command globally with Discord.
-
-6. **Start the bot:**
-   ```bash
-   npm start
-   ```
-   Or for development with auto-reload:
-   ```bash
-   npm run dev
-   ```
-
-## Project Structure
+## Project structure
+Below is a basic overview of the project structure:
 
 ```
-discord-form-bot/
-├── src/
-│   ├── index.ts              # Main bot file with auto-loading
-│   ├── commands/
-│   │   └── form.ts           # Form slash command
-│   ├── events/
-│   │   ├── interactionCreate.ts  # Handle interactions
-│   │   └── ready.ts          # Bot ready event
-│   └── deploy.ts             # Command deployment script
-├── dist/                     # Compiled JavaScript (generated)
+├── examples    -> short, feature-specific sample apps
+│   ├── app.js  -> finished app.js code
+│   ├── button.js
+│   ├── command.js
+│   ├── modal.js
+│   ├── selectMenu.js
+├── .env.sample -> sample .env file
+├── app.js      -> main entrypoint for app
+├── commands.js -> slash command payloads + helpers
+├── game.js     -> logic specific to RPS
+├── utils.js    -> utility functions and enums
 ├── package.json
-├── tsconfig.json
-├── .env                      # Environment variables (create from .env.example)
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
-## Usage
+## Running app locally
 
-1. Invite your bot to a Discord server with the following permissions:
-   - `applications.commands` (to use slash commands)
-   - `Send Messages` (to post form responses)
+Before you start, you'll need to install [NodeJS](https://nodejs.org/en/download/) and [create a Discord app](https://discord.com/developers/applications) with the proper permissions:
+- `applications.commands`
+- `bot` (with Send Messages enabled)
 
-2. Use the `/form` command in any channel where the bot has access.
 
-3. Fill out the modal that appears with:
-   - **Name**: A short text input
-   - **Message**: A paragraph text input
+Configuring the app is covered in detail in the [getting started guide](https://discord.com/developers/docs/getting-started).
 
-4. Submit the form, and the bot will post the collected information as an embed in the channel.
+### Setup project
 
-## Scripts
+First clone the project:
+```
+git clone https://github.com/discord/discord-example-app.git
+```
 
-- `npm run dev` - Run the bot in development mode with auto-reload (nodemon + ts-node)
-- `npm run deploy` - Deploy/register slash commands globally
-- `npm run build` - Compile TypeScript to JavaScript
-- `npm start` - Run the compiled bot (requires build first)
+Then navigate to its directory and install dependencies:
+```
+cd discord-example-app
+npm install
+```
+### Get app credentials
 
-## Development
+Fetch the credentials from your app's settings and add them to a `.env` file (see `.env.sample` for an example). You'll need your app ID (`APP_ID`), bot token (`DISCORD_TOKEN`), and public key (`PUBLIC_KEY`).
 
-The bot uses TypeScript and automatically loads commands and events from their respective directories. To add new commands:
+Fetching credentials is covered in detail in the [getting started guide](https://discord.com/developers/docs/getting-started).
 
-1. Create a new file in `src/commands/`
-2. Export a `data` property (SlashCommandBuilder) and an `execute` function
-3. Rebuild and redeploy commands
+> 🔑 Environment variables can be added to the `.env` file in Glitch or when developing locally, and in the Secrets tab in Replit (the lock icon on the left).
 
-## Notes
+### Install slash commands
 
-- Commands are registered globally, which may take up to an hour to propagate. For faster testing, use guild-specific commands during development.
-- Make sure your bot has the necessary intents enabled in the Discord Developer Portal.
-- The bot requires the `Guilds` intent to function properly.
+The commands for the example app are set up in `commands.js`. All of the commands in the `ALL_COMMANDS` array at the bottom of `commands.js` will be installed when you run the `register` command configured in `package.json`:
 
+```
+npm run register
+```
+
+### Run the app
+
+After your credentials are added, go ahead and run the app:
+
+```
+node app.js
+```
+
+> ⚙️ A package [like `nodemon`](https://github.com/remy/nodemon), which watches for local changes and restarts your app, may be helpful while locally developing.
+
+If you aren't following the [getting started guide](https://discord.com/developers/docs/getting-started), you can move the contents of `examples/app.js` (the finished `app.js` file) to the top-level `app.js`.
+
+### Set up interactivity
+
+The project needs a public endpoint where Discord can send requests. To develop and test locally, you can use something like [`ngrok`](https://ngrok.com/) to tunnel HTTP traffic.
+
+Install ngrok if you haven't already, then start listening on port `3000`:
+
+```
+ngrok http 3000
+```
+
+You should see your connection open:
+
+```
+Tunnel Status                 online
+Version                       2.0/2.0
+Web Interface                 http://127.0.0.1:4040
+Forwarding                    https://1234-someurl.ngrok.io -> localhost:3000
+
+Connections                  ttl     opn     rt1     rt5     p50     p90
+                              0       0       0.00    0.00    0.00    0.00
+```
+
+Copy the forwarding address that starts with `https`, in this case `https://1234-someurl.ngrok.io`, then go to your [app's settings](https://discord.com/developers/applications).
+
+On the **General Information** tab, there will be an **Interactions Endpoint URL**. Paste your ngrok address there, and append `/interactions` to it (`https://1234-someurl.ngrok.io/interactions` in the example).
+
+Click **Save Changes**, and your app should be ready to run 🚀
+
+## Other resources
+- Read **[the documentation](https://discord.com/developers/docs/intro)** for in-depth information about API features.
+- Browse the `examples/` folder in this project for smaller, feature-specific code examples
+- Join the **[Discord Developers server](https://discord.gg/discord-developers)** to ask questions about the API, attend events hosted by the Discord API team, and interact with other devs.
+- Check out **[community resources](https://discord.com/developers/docs/topics/community-resources#community-resources)** for language-specific tools maintained by community members.

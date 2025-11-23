@@ -1,25 +1,26 @@
 {
-  "name": "discord-form-bot",
+  "name": "discord-getting-started",
+  "private": true,
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
-    "deploy": "ts-node src/deploy.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+  "description": "Discord example app",
+  "main": "app.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "Discord bot with modal form support using discord.js v14",
+  "scripts": {
+    "start": "node app.js",
+    "register": "node commands.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Shay DeWael",
+  "license": "MIT",
   "dependencies": {
-    "discord.js": "^14.25.1",
-    "dotenv": "^17.2.3"
+    "discord-interactions": "^4.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
-    "nodemon": "^3.1.11",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "nodemon": "^3.0.0"
   }
 }
