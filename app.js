@@ -150,6 +150,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
     return res.status(400).json({ error: 'unknown command' });
   }
 
+  // We only have one modal command so we dont need more IF statements to handle it
+  if (type === InteractionType.MODAL_SUBMIT) {
+    console.log('modal submitted', req.body);
+    return res.status(200).json({ message: 'Modal submitted' });
+  }
+
   console.error('unknown interaction type', type);
   return res.status(400).json({ error: 'unknown interaction type' });
 });
