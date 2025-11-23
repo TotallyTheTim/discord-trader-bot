@@ -167,12 +167,7 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       await DiscordRequest(`channels/${channelToPostTradesIn}/messages`, {
         method: 'POST',
         body: {
-          components: [
-            {
-              type: MessageComponentTypes.TEXT_DISPLAY,
-              content: `<@${memberId}> submitted the following trade offer: ${data.toString()}, DM them to talk about the trade.`
-            }
-          ]
+          content: `<@${memberId}> submitted the following trade offer: ${data.toString()}, DM them to talk about the trade.`
         },
       });
     } catch (err) {
