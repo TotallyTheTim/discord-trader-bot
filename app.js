@@ -66,6 +66,86 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
       });
     }
 
+    // "trade" command
+    if (name === 'trade') {
+      const COMPONENT_IDS = {
+        ACTION_ROW: 1,
+        BUTTON: 2,
+        STRING_SELECT: 3,
+        INPUT_TEXT: 4,
+        USER_SELECT: 5,
+        ROLE_SELECT: 6,
+        MENTIONABLE_SELECT: 7,
+        CHANNEL_SELECT: 8,
+        SECTION: 9,
+        TEXT_DISPLAY: 10,
+        THUMBNAIL: 11,
+        MEDIA_GALLERY: 12,
+        FILE: 13,
+        SEPARATOR: 14,
+        CONTAINER: 17,
+        LABEL: 18,
+        FILE_UPLOAD: 19,
+      }
+      // Send a message into the channel where command was triggered from
+      return res.send({
+        "type": InteractionResponseType.MODAL,
+        "data": {
+          "custom_id": "trade_modal",
+          "title": "Trade ARC Raiders Items",
+          "components": [
+            {
+              "type": COMPONENT_IDS.LABEL,
+              "label": "What's your favorite bug?",
+              "component": {
+                "type": COMPONENT_IDS.STRING_SELECT,
+                "custom_id": "bug_string_select",
+                "placeholder": "Choose...",
+                "options": [
+                  {
+                    "label": "Ant",
+                    "value": "ant",
+                    "description": "(best option)",
+                    "emoji": {
+                      "name": "🐜"
+                    }
+                  },
+                  {
+                    "label": "Butterfly",
+                    "value": "butterfly",
+                    "emoji": {
+                      "name": "🦋"
+                    }
+                  },
+                  {
+                    "label": "Caterpillar",
+                    "value": "caterpillar",
+                    "emoji": {
+                      "name": "🐛"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": COMPONENT_IDS.LABEL,
+              "label": "Why is it your favorite?",
+              "description": "Please provide as much detail as possible!",
+              "component": {
+                "type": COMPONENT_IDS.INPUT_TEXT,
+                "custom_id": "bug_explanation",
+                "style": 2,
+                "min_length": 1000,
+                "max_length": 4000,
+                "placeholder": "Write your explanation here...",
+                "required": true
+              }
+            }
+          ]
+        }
+      });
+    }
+
     console.error(`unknown command: ${name}`);
     return res.status(400).json({ error: 'unknown command' });
   }

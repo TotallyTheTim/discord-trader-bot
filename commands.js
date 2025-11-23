@@ -26,6 +26,18 @@ const TEST_COMMAND = {
   contexts: [0, 1, 2],
 };
 
+const TRADE_COMMAND = {
+  name: 'trade',
+  description: 'Trade ARC Raiders Items',
+  options: [
+    {
+      type: 3,
+      name: 'friend',
+      description: 'Opens a trading model to put in a trade offer in a different item',
+    },
+  ],
+}
+
 // Command containing options
 const CHALLENGE_COMMAND = {
   name: 'challenge',
@@ -44,6 +56,6 @@ const CHALLENGE_COMMAND = {
   contexts: [0, 2],
 };
 
-const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND];
+const ALL_COMMANDS = [TEST_COMMAND, CHALLENGE_COMMAND, TRADE_COMMAND];
 
 InstallGlobalCommands(process.env.APP_ID, ALL_COMMANDS);
