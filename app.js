@@ -18,12 +18,9 @@ const PORT = process.env.PORT || 3000;
 // To keep track of our active games
 const activeGames = {};
 
-// Parse JSON body for POST requests
-app.use(express.json());
-
 // Health check endpoint
-app.get('/', (req, res) => {
-  res.send('Discord bot is running!');
+app.get('/', async (req, res) => {
+  return res.send('Discord bot is running!');
 });
 
 /**
@@ -152,7 +149,9 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 
   // We only have one modal command so we dont need more IF statements to handle it
   if (type === InteractionType.MODAL_SUBMIT) {
-    console.log('modal submitted', req.body);
+    const memberId = req.body.member.user.id;
+    const responses = req.body.data.components;
+    console.log('modal submitted', memberId, responses);
     return res.status(200).json({ message: 'Modal submitted' });
   }
 
