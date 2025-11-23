@@ -167,6 +167,7 @@ app.listen(PORT, () => {
 function getDataFromModalComponents(components) {
   const data = {};
   for (const component of components) {
+    console.log('component', component);
     const value = component.value ?? component.values;
     data[component.custom_id] = value;
   }
