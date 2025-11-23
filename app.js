@@ -150,8 +150,9 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
   // We only have one modal command so we dont need more IF statements to handle it
   if (type === InteractionType.MODAL_SUBMIT) {
     const memberId = req.body.member.user.id;
-    const responses = req.body.data.components;
-    console.log('modal submitted', memberId, responses);
+    const components = req.body.data.components;
+    const data = getDataFromModalComponents(components);
+    console.log('modal submitted', memberId, data);
     return res.status(200).json({ message: 'Modal submitted' });
   }
 
@@ -162,3 +163,12 @@ app.post('/interactions', verifyKeyMiddleware(process.env.PUBLIC_KEY), async fun
 app.listen(PORT, () => {
   console.log('Listening on port', PORT);
 });
+
+function getDataFromModalComponents(components) {
+  const data = {};
+  for (const component of components) {
+    const value = component.value ?? component.values;
+    data[component.custom_id] = value;
+  }
+  return data;
+}
