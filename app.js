@@ -18,6 +18,14 @@ const PORT = process.env.PORT || 3000;
 // To keep track of our active games
 const activeGames = {};
 
+// Parse JSON body for POST requests
+app.use(express.json());
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.send('Discord bot is running!');
+});
+
 /**
  * Interactions endpoint URL where Discord will send HTTP requests
  * Parse request body and verifies incoming requests using discord-interactions package
